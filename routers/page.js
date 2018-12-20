@@ -44,6 +44,8 @@ router.post('/:id', [
         let pageId = req.params.id;
         Page.findByPk(pageId)
             .then(page => {
+                // Could maybe use the req body directly but just in case we have some rogue values,
+                // we should be specific.
                 let updatedPage = {
                     name: req.body.name,
                     description: req.body.description
