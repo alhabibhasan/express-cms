@@ -16,7 +16,7 @@ const pageValidationChecks = [
  *
  *  So far:
  *      - Pages
- *          -C- -R- -U- D
+ *          -C- -R- -U- -D-
 *           - Bands
 *               C R U D
  */
@@ -110,10 +110,23 @@ router.post('/', pageValidationChecks, (req, res) => {
 
 
 router.delete('/:id', (req, res) => {
-
-    res.send({
-        'deleting-page': req.params.id
-    })
+    let pageId = req.params.id;
+    Page.findByPk(pageId)
+        .then(page => {
+            if (page) {
+                page.destroy();
+                res.send({
+                    'deleted': page
+                });
+            } else {
+                res.send({
+                    'delete_error' : 'The page you tried to delete doesn\'t exist.'
+                });
+            }
+        });
+        return {
+            'delete_error': 'Failed to delete the page.'
+        }
 });
 
 /**
