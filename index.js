@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const portNumber = 3000;
-const pageRouter = require('./routers/page')
+const pageRouter = require('./routers/page/page')
 
 app.use(bodyParser.json());
 app.use('/pages', pageRouter)
