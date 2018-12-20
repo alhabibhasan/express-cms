@@ -30,18 +30,18 @@ const create_page_bands_table_query = `create table page_bands (
 );`
 
 db.query(create_page_table_query, function (err, results, fields) {
-  if (err) throw err
-  console.log('Pages table created successfully.')
+    if (err) throw err
+    console.log('Pages table created successfully.')
 })
 
 db.query(create_band_table_query, function (err, results, fields) {
-  if (err) throw err
-  console.log('Bands table created successfully.')
+    if (err) throw err
+    console.log('Bands table created successfully.')
 })
 
 db.query(create_page_bands_table_query, function (err, results, fields) {
-  if (err) throw err
-  console.log('Page bands table created successfully.')
+    if (err) throw err
+    console.log('Page bands table created successfully.')
 })
 
 db.end()

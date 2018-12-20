@@ -6,8 +6,8 @@ const pageRouter = require('./routers/page')
 
 app.use('/pages', pageRouter)
 
-app.get('/', function(req, res){
-   res.send("Hello world!");
+app.get('/', function (req, res) {
+    res.send("Hello world!");
 });
 
 app.listen(portNumber, () => console.log('Running on port ' + portNumber));
