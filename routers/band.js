@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Band = require('../lib/models').Band;
 const {check, validationResult, body} = require('express-validator/check');
+const crudHelper = require('../lib/helpers/crud');
 
 const bandValidationChecks = [
     check('header').not().isEmpty().withMessage('Band header cannot be empty.'),
@@ -27,14 +28,47 @@ router.post('/', bandValidationChecks, (req, res) => {
         PageId: req.body.pageId
     };
 
-    Band.create(newBand)
-        .then((band) => {
-            res.send({createdBand:band});
-        });
+    let pageCreationConfig = {
+        model: Band,
+        fields: newBand
+    };
+
+    crudHelper.createModel(req, res, pageCreationConfig);
 
     return {
         'create_error': 'Failed to create a band.'
     };
+});
+
+router.patch('/:bandId', bandValidationChecks, (req, res) => {
+    checkValidation(req, res);
+
+    let bandUpdateConfig = {
+        model: Band,
+        updatedFields: req.body,
+        id: req.params.bandId
+    };
+
+    crudHelper.updateModel(req, res, bandUpdateConfig);
+
+    return {
+        'update_error': 'Failed to update the band.'
+    }
+
+});
+
+
+router.delete('/:bandId', (req, res) => {
+    let deleteConfig = {
+        model: Band,
+        id: req.params.bandId
+    };
+
+    crudHelper.deleteModel(req, res, deleteConfig);
+
+    return {
+        'delete_error': 'Failed to delete the page.'
+    }
 });
 
 function checkValidation(req, res) {
