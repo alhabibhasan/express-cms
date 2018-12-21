@@ -18,6 +18,10 @@ const bandValidationChecks = [
     })
 ];
 
+/**
+ * Create band and add to the set of bands the current page has.
+ * Page id is passed in from the page router.
+ */
 router.post('/', bandValidationChecks, (req, res) => {
     checkValidation(req, res);
 
@@ -40,6 +44,9 @@ router.post('/', bandValidationChecks, (req, res) => {
     };
 });
 
+/**
+ * Update band with ID
+ */
 router.patch('/:bandId', bandValidationChecks, (req, res) => {
     checkValidation(req, res);
 
@@ -57,7 +64,9 @@ router.patch('/:bandId', bandValidationChecks, (req, res) => {
 
 });
 
-
+/**
+ * Delete band with Id
+ */
 router.delete('/:bandId', (req, res) => {
     let deleteConfig = {
         model: Band,

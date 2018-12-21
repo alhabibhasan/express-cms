@@ -30,6 +30,24 @@ router.get('/', (req, res) => {
 });
 
 /**
+ * Create page
+ */
+router.post('/', pageValidationChecks, (req, res) => {
+    checkValidation(req, res);
+
+    let pageCreationConfig = {
+        model: Page,
+        fields: req.body
+    };
+
+    crudHelper.createModel(req, res, pageCreationConfig);
+
+    return {
+        'create_error': 'Failed to create the page.'
+    }
+});
+
+/**
  * Show page with specified id
  */
 router.get('/:pageId', (req, res) => {
@@ -60,39 +78,20 @@ router.get('/:pageId', (req, res) => {
  * Update page with specified id
  */
 router.patch('/:pageId', pageValidationChecks, (req, res) => {
-        checkValidation(req, res);
+    checkValidation(req, res);
 
-        let pageUpdateConfig = {
-            model: Page,
-            updatedFields: req.body,
-            id: req.params.pageId
-        };
+    let pageUpdateConfig = {
+        model: Page,
+        updatedFields: req.body,
+        id: req.params.pageId
+    };
 
-        crudHelper.updateModel(req, res, pageUpdateConfig);
+    crudHelper.updateModel(req, res, pageUpdateConfig);
 
-        return {
-            'update_error': 'Failed to update the page.'
-        }
+    return {
+        'update_error': 'Failed to update the page.'
+    }
 });
-
-/**
- * Create page
- */
-router.post('/', pageValidationChecks, (req, res) => {
-        checkValidation(req, res);
-
-        let pageCreationConfig = {
-            model: Page,
-            fields: req.body
-        };
-
-        crudHelper.createModel(req, res, pageCreationConfig);
-
-        return {
-            'create_error': 'Failed to create the page.'
-        }
-});
-
 
 router.delete('/:pageId', (req, res) => {
     let deleteConfig = {
@@ -122,6 +121,4 @@ function checkValidation(req, res) {
     }
 }
 
-module.exports = {
-    router
-};
+module.exports = router;
