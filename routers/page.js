@@ -17,8 +17,6 @@ const pageValidationChecks = [
  *  So far:
  *      - Pages
  *          -C- -R- -U- -D-
-*           - Bands
-*               C R U D
  */
 
 router.use(function showingPages(req, res, next) {
