@@ -3,10 +3,10 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const portNumber = 3000;
-const pageRouter = require('./routers/page/page')
+const pageRouter = require('./routers/page').router;
 
 app.use(bodyParser.json());
-app.use('/pages', pageRouter)
+app.use('/pages', pageRouter);
 
 app.get('/', function (req, res) {
     res.send("Hello world!");
