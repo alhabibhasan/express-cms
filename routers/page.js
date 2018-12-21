@@ -3,6 +3,7 @@ const router = express.Router();
 const {Page, Band} = require('../lib/models');
 const bandRouter = require('./band');
 const {check, validationResult} = require('express-validator/check');
+const crudHelper = require('../lib/helpers/crud');
 
 const pageValidationChecks = [
     check('name').not().isEmpty().withMessage('Name cannot be empty.'),
@@ -58,29 +59,17 @@ router.get('/:pageId', (req, res) => {
 /**
  * Update page with specified id
  */
-router.post('/:pageId', pageValidationChecks, (req, res) => {
+router.patch('/:pageId', pageValidationChecks, (req, res) => {
         checkValidation(req, res);
 
-        let pageId = req.params.pageId;
-        Page.findByPk(pageId)
-            .then(page => {
-                // Could maybe use the req body directly but just in case we have some rogue values,
-                // we should be specific.
-                if (page) {
-                    let updatedPage = {
-                        name: req.body.name,
-                        description: req.body.description
-                    };
-                    page.update(updatedPage)
-                        .then(() => {
-                            res.send({updatedPage:updatedPage});
-                        })
-                } else {
-                    res.send({
-                        'not_found': 'The page you tried to edit doesn\'t exist.'
-                    })
-                }
-            });
+        let pageUpdateConfig = {
+            model: Page,
+            updatedFields: req.body,
+            id: req.params.pageId
+        };
+
+        crudHelper.updateModel(req, res, pageUpdateConfig);
+
         return {
             'update_error': 'Failed to update the page.'
         }
@@ -92,15 +81,12 @@ router.post('/:pageId', pageValidationChecks, (req, res) => {
 router.post('/', pageValidationChecks, (req, res) => {
         checkValidation(req, res);
 
-        let newPage = {
-            name: req.body.name,
-            description: req.body.description
+        let pageCreationConfig = {
+            model: Page,
+            fields: req.body
         };
 
-        Page.create(newPage)
-            .then((page) => {
-                res.send({createdPage:page});
-            });
+        crudHelper.createModel(req, res, pageCreationConfig);
 
         return {
             'create_error': 'Failed to create the page.'
@@ -109,23 +95,16 @@ router.post('/', pageValidationChecks, (req, res) => {
 
 
 router.delete('/:pageId', (req, res) => {
-    let pageId = req.params.pageId;
-    Page.findByPk(pageId)
-        .then(page => {
-            if (page) {
-                page.destroy();
-                res.send({
-                    'deleted': page
-                });
-            } else {
-                res.send({
-                    'delete_error' : 'The page you tried to delete doesn\'t exist.'
-                });
-            }
-        });
-        return {
-            'delete_error': 'Failed to delete the page.'
-        }
+    let deleteConfig = {
+        model: Page,
+        id: req.params.pageId
+    };
+
+    crudHelper.deleteModel(req, res, deleteConfig);
+
+    return {
+        'delete_error': 'Failed to delete the page.'
+    }
 });
 
 /**
