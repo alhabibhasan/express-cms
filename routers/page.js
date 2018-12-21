@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Page = require('../../lib/models').Page;
+const {Page, Band} = require('../lib/models');
+const bandRouter = require('./band');
 const {check, validationResult} = require('express-validator/check');
 
 const pageValidationChecks = [
@@ -9,22 +10,12 @@ const pageValidationChecks = [
     check('description').isLength({min:0, max: 500}).withMessage('Description cannot be more than 500 characters long.')
 ];
 
-/*
- * TODO:
- *  - re create db tables as description was spelt incorrectly
- *  - create the rest of the CRUD routes for bands and pages.
- *
- *  So far:
- *      - Pages
- *          -C- -R- -U- -D-
- */
-
-router.use(function showingPages(req, res, next) {
-    // This middleware function will only be ran once the pages router is entered regardless of
-    // which HTTP method is used.
-    console.log('Entered the pages middleware');
+router.use('/:pageId/bands', (req, res, next) => {
+    // pass the page id into the body of the request as we cannot access it inside the
+    // band router otherwise.
+    req.body.pageId = req.params.pageId;
     next();
-});
+} ,bandRouter );
 
 /**
  * Show all pages.
@@ -40,12 +31,22 @@ router.get('/', (req, res) => {
 /**
  * Show page with specified id
  */
-router.get('/:id', (req, res) => {
-    let pageId = req.params.id;
+router.get('/:pageId', (req, res) => {
+    let pageId = req.params.pageId;
     return Page.findByPk(pageId)
         .then(page => {
             if (page) {
-                res.send(page);
+                Band.findAll({
+                    where: {
+                        PageId: pageId
+                    }
+                })
+                    .then(bands => {
+                        res.send({
+                            page: page,
+                            bands: bands
+                        });
+                    })
             } else {
                 res.send({
                     'not_found': 'The page you requested doesn\'t exist.'
@@ -57,10 +58,10 @@ router.get('/:id', (req, res) => {
 /**
  * Update page with specified id
  */
-router.post('/:id', pageValidationChecks, (req, res) => {
+router.post('/:pageId', pageValidationChecks, (req, res) => {
         checkValidation(req, res);
 
-        let pageId = req.params.id;
+        let pageId = req.params.pageId;
         Page.findByPk(pageId)
             .then(page => {
                 // Could maybe use the req body directly but just in case we have some rogue values,
@@ -107,8 +108,8 @@ router.post('/', pageValidationChecks, (req, res) => {
 });
 
 
-router.delete('/:id', (req, res) => {
-    let pageId = req.params.id;
+router.delete('/:pageId', (req, res) => {
+    let pageId = req.params.pageId;
     Page.findByPk(pageId)
         .then(page => {
             if (page) {
@@ -142,4 +143,6 @@ function checkValidation(req, res) {
     }
 }
 
-module.exports = router;
+module.exports = {
+    router
+};
