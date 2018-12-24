@@ -21,7 +21,7 @@ if (app.settings.env === 'development') {
         },
     });
 } else {
-    sequelize = new Sequelize(process.env.DATABASE_URL, {
+    sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL, {
         dialect: 'mysql'
     })
 }
