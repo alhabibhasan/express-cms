@@ -22,11 +22,10 @@ router.use('/:pageId/bands', (req, res, next) => {
  * Show all pages.
  */
 router.get('/', (req, res) => {
-    res.send(
-        {
-            data: 'Pages home page'
-        }
-    )
+    crudHelper.getAll(req, res, {model: Page})
+    return {
+            'get_index_error': 'Failed to retrieve all pages.'
+    }
 });
 
 /**
