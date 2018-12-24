@@ -6,7 +6,7 @@ const user = 'express';
 const password = 'password';
 let sequelize = {};
 
-if (app.settings.env === 'developement') {
+if (app.settings.env === 'development') {
     sequelize = new Sequelize(database, user, password, {
         host: 'localhost',
         dialect: 'mysql',
@@ -20,7 +20,9 @@ if (app.settings.env === 'developement') {
         },
     });
 } else {
-    sequelize = new Sequelize(process.env.DATABASE_URL);
+    sequelize = new Sequelize(process.env.DATABASE_URL, {
+        dialect: 'postgres'
+    });
 }
 
 sequelize
