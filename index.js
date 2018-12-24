@@ -1,9 +1,12 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-
-const portNumber = process.env.PORT;
 const pageRouter = require('./routers/page');
+
+let portNumber = 3000;
+if (app.settings.env !== 'development') {
+    portNumber = process.env.PORT;
+}
 
 app.use(bodyParser.json());
 app.use('/pages', pageRouter);
