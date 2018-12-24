@@ -4,7 +4,7 @@ const app = express();
 const database = 'express_cms';
 const user = 'express';
 const password = 'password';
-const sequelize = {};
+let sequelize = {};
 
 if (app.settings.env === 'developement') {
     sequelize = new Sequelize(database, user, password, {
