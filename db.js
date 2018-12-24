@@ -1,13 +1,28 @@
-const mysql = require('mysql')
-let connection = mysql.createConnection({
+const Sequelize = require('sequelize');
+const database = 'express_cms';
+const user = 'express';
+const password = 'password';
+
+const sequelize = new Sequelize(database, user, password, {
     host: 'localhost',
-    user: 'express',
-    password: 'password',
-    database: 'express_cms'
+    dialect: 'mysql',
+    operatorsAliases: false,
+
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+    },
 });
 
-connection.connect(function (err) {
-    if (err) throw err;
-});
+sequelize
+    .authenticate()
+    .then(() => {
+        console.log('Connection has been established successfully.');
+    })
+    .catch(err => {
+        console.error('Unable to connect to the database:', err);
+    });
 
-module.exports = connection;
+module.exports = sequelize;

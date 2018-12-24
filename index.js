@@ -1,10 +1,12 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 
 const portNumber = 3000;
-const pageRouter = require('./routers/page')
+const pageRouter = require('./routers/page');
 
-app.use('/pages', pageRouter)
+app.use(bodyParser.json());
+app.use('/pages', pageRouter);
 
 app.get('/', function (req, res) {
     res.send("Hello world!");
