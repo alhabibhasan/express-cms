@@ -9,7 +9,7 @@ if (app.settings.env !== 'development') {
 }
 
 app.use(bodyParser.json());
-app.use('/pages', pageRouter);
+app.use('api/page', pageRouter);
 
 app.get('/', function (req, res) {
     res.send("Hello world!");
