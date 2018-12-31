@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const pageRouter = require('./routers/page');
 
@@ -9,7 +10,8 @@ if (app.settings.env !== 'development') {
 }
 
 app.use(bodyParser.json());
-app.use('api/page', pageRouter);
+
+app.use('/api/pages', cors() , pageRouter);
 
 app.get('/', function (req, res) {
     res.send("Hello world!");
